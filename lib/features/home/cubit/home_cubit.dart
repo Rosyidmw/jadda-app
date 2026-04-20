@@ -80,7 +80,6 @@ class HomeCubit extends Cubit<HomeState> {
         final currentState = state as HomeLoaded;
         final schedule = currentState.currentSchedule;
 
-        // Hanya jalankan timer jika data ada dan tanggal yang dipilih adalah HARI INI
         if (schedule != null && currentState.selectedDate == todayStr) {
           final timeData = TimeService.getCurrentAndNextPrayer(schedule);
 
@@ -90,7 +89,7 @@ class HomeCubit extends Cubit<HomeState> {
               cityName: currentState.cityName,
               monthlySchedule: currentState.monthlySchedule,
               selectedDate: currentState.selectedDate,
-              // Masukkan data realtime-nya
+
               activePrayer: timeData["activePrayer"]!,
               activePrayerTime: timeData["activePrayerTime"]!,
               countdown: timeData["countdown"]!,
@@ -107,15 +106,68 @@ class HomeCubit extends Cubit<HomeState> {
     return super.close();
   }
 
-  void changeSelectedDate(String newDateString) {
+  Future<void> changeSelectedDate(String newDateString) async {
     if (state is HomeLoaded) {
       final currentState = state as HomeLoaded;
       emit(
         HomeLoaded(
-          hijriDate: currentState.hijriDate,
+          hijriDate: "Memuat tanggal Hijriah...",
           cityName: currentState.cityName,
           monthlySchedule: currentState.monthlySchedule,
           selectedDate: newDateString,
+          activePrayer: currentState.activePrayer,
+          activePrayerTime: currentState.activePrayerTime,
+          countdown: currentState.countdown,
+        ),
+      );
+
+      try {
+        print('🚀 [Home] GET /cal/hijr/$newDateString ...');
+        final hijrUrl = Uri.parse(
+          "${StringConstant.baseUrl}/cal/hijr/$newDateString",
+        );
+        final hijrResponse = await http.get(hijrUrl);
+
+        if (hijrResponse.statusCode == 200) {
+          final hijrBody = jsonDecode(hijrResponse.body);
+          final newHijriString = hijrBody['data']['hijr']['today'] ?? "";
+          print('✅ [Home] Tanggal Hijriah Update: $newHijriString');
+          if (state is HomeLoaded) {
+            final updatedState = state as HomeLoaded;
+            emit(
+              HomeLoaded(
+                hijriDate: newHijriString,
+                cityName: updatedState.cityName,
+                monthlySchedule: updatedState.monthlySchedule,
+                selectedDate: updatedState.selectedDate,
+                activePrayer: updatedState.activePrayer,
+                activePrayerTime: updatedState.activePrayerTime,
+                countdown: updatedState.countdown,
+              ),
+            );
+          }
+        } else {
+          _emitHijriErrorFallback(newDateString);
+        }
+      } catch (e) {
+        print('❌ [Home Error] Gagal memuat konversi Hijriah: $e');
+        _emitHijriErrorFallback(newDateString);
+      }
+    }
+  }
+
+  void _emitHijriErrorFallback(String dateString) {
+    if (state is HomeLoaded) {
+      final currentState = state as HomeLoaded;
+      emit(
+        HomeLoaded(
+          hijriDate: "-",
+          cityName: currentState.cityName,
+          monthlySchedule: currentState.monthlySchedule,
+          selectedDate: dateString,
+          activePrayer: currentState.activePrayer,
+          activePrayerTime: currentState.activePrayerTime,
+          countdown: currentState.countdown,
         ),
       );
     }

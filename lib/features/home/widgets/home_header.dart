@@ -7,6 +7,7 @@ class HomeHeader extends StatelessWidget {
   final String activePrayer;
   final String activePrayerTime;
   final String countdown;
+  final bool isToday;
 
   const HomeHeader({
     super.key,
@@ -14,6 +15,7 @@ class HomeHeader extends StatelessWidget {
     required this.activePrayer,
     required this.activePrayerTime,
     required this.countdown,
+    required this.isToday,
   });
 
   @override
@@ -45,12 +47,12 @@ class HomeHeader extends StatelessWidget {
               const SizedBox(height: 8),
 
               Text(
-                activePrayer,
+                isToday ? activePrayer : "Jadwal Salat",
                 style: FontConstant.h2.copyWith(color: ColorConstant.white),
               ),
 
               Text(
-                activePrayerTime,
+                isToday ? activePrayerTime : "Sesuai tanggal pilihan",
                 style: FontConstant.caption.copyWith(
                   color: ColorConstant.surface,
                 ),
@@ -87,10 +89,21 @@ class HomeHeader extends StatelessWidget {
               border: Border.all(color: ColorConstant.textPrimary, width: 6),
             ),
             child: Center(
-              child: Text(
-                countdown,
-                style: FontConstant.h3.copyWith(color: ColorConstant.white),
-              ),
+              child: isToday
+                  ? Text(
+                      countdown,
+                      style: FontConstant.h3.copyWith(
+                        color: ColorConstant.white,
+                      ),
+                    )
+                  : Text(
+                      "Jadwal\nLain",
+                      textAlign: .center,
+                      style: FontConstant.bodySmall.copyWith(
+                        color: ColorConstant.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
             ),
           ),
         ],

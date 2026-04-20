@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jadda/features/home/widgets/date_picker_sheet.dart';
 import 'package:jadda/features/home/widgets/date_selector_card.dart';
 import 'package:jadda/features/home/widgets/schedule_item.dart';
 import '../../../core/constants/color_constant.dart';
@@ -29,6 +30,11 @@ class HomeScreen extends StatelessWidget {
           } else if (state is HomeLoaded) {
             final currentSchedule = state.currentSchedule;
             final gregorianDate = currentSchedule?.tanggal ?? "Pilih Tanggal";
+            final now = DateTime.now();
+            final todayStr =
+                "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
+            final isToday = state.selectedDate == todayStr;
+            final homeCubit = context.read<HomeCubit>();
 
             return SafeArea(
               bottom: false, // Biar bottom nav mengambil sisa area bawah
@@ -40,6 +46,7 @@ class HomeScreen extends StatelessWidget {
                     activePrayer: state.activePrayer,
                     activePrayerTime: state.activePrayerTime,
                     countdown: state.countdown,
+                    isToday: isToday,
                   ),
 
                   // 2. BODY WIDGET (Melengkung putih)
@@ -59,10 +66,18 @@ class HomeScreen extends StatelessWidget {
                             gregorianDate: gregorianDate,
                             hijriDate: state.hijriDate,
                             onTap: () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    'Fitur ganti tanggal akan segera hadir!',
+                              showModalBottomSheet(
+                                context: context,
+                                backgroundColor: Colors.transparent,
+                                isScrollControlled: true,
+                                builder: (context) => FractionallySizedBox(
+                                  heightFactor: 0.6,
+                                  child: DatePickerSheet(
+                                    monthlySchedule: state.monthlySchedule,
+                                    selectedDate: state.selectedDate,
+                                    onDateSelected: (newDate) {
+                                      homeCubit.changeSelectedDate(newDate);
+                                    },
                                   ),
                                 ),
                               );
@@ -86,39 +101,51 @@ class HomeScreen extends StatelessWidget {
                                       ScheduleItem(
                                         name: "Imsak",
                                         time: currentSchedule.imsak,
-                                        isActive: state.activePrayer == "Imsak",
+                                        isActive:
+                                            isToday &&
+                                            state.activePrayer == "Imsak",
                                       ),
                                       ScheduleItem(
                                         name: "Subuh",
                                         time: currentSchedule.subuh,
-                                        isActive: state.activePrayer == "Subuh",
+                                        isActive:
+                                            isToday &&
+                                            state.activePrayer == "Subuh",
                                       ),
                                       ScheduleItem(
                                         name: "Dhuha",
                                         time: currentSchedule.dhuha,
-                                        isActive: state.activePrayer == "Dhuha",
+                                        isActive:
+                                            isToday &&
+                                            state.activePrayer == "Dhuha",
                                       ),
                                       ScheduleItem(
                                         name: "Dzuhur",
                                         time: currentSchedule.dzuhur,
                                         isActive:
+                                            isToday &&
                                             state.activePrayer == "Dzuhur",
                                       ),
                                       ScheduleItem(
                                         name: "Ashar",
                                         time: currentSchedule.ashar,
-                                        isActive: state.activePrayer == "Ashar",
+                                        isActive:
+                                            isToday &&
+                                            state.activePrayer == "Ashar",
                                       ),
                                       ScheduleItem(
                                         name: "Maghrib",
                                         time: currentSchedule.maghrib,
                                         isActive:
+                                            isToday &&
                                             state.activePrayer == "Maghrib",
                                       ),
                                       ScheduleItem(
                                         name: "Isya",
                                         time: currentSchedule.isya,
-                                        isActive: state.activePrayer == "Isya",
+                                        isActive:
+                                            isToday &&
+                                            state.activePrayer == "Isya",
                                       ),
                                     ],
                                   )
