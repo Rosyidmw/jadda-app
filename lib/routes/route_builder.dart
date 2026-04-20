@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jadda/features/home/cubit/home_cubit.dart';
-import 'package:jadda/features/home/screen/home_screen.dart';
 import 'package:jadda/features/main/main_screen.dart';
 import 'package:jadda/features/splash/splash_screen.dart';
 import 'package:jadda/routes/route_path.dart';

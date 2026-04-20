@@ -35,7 +35,12 @@ class HomeScreen extends StatelessWidget {
               child: Column(
                 children: [
                   // 1. HEADER WIDGET
-                  HomeHeader(cityName: state.cityName),
+                  HomeHeader(
+                    cityName: state.cityName,
+                    activePrayer: state.activePrayer,
+                    activePrayerTime: state.activePrayerTime,
+                    countdown: state.countdown,
+                  ),
 
                   // 2. BODY WIDGET (Melengkung putih)
                   Expanded(
@@ -81,31 +86,39 @@ class HomeScreen extends StatelessWidget {
                                       ScheduleItem(
                                         name: "Imsak",
                                         time: currentSchedule.imsak,
+                                        isActive: state.activePrayer == "Imsak",
                                       ),
                                       ScheduleItem(
                                         name: "Subuh",
                                         time: currentSchedule.subuh,
+                                        isActive: state.activePrayer == "Subuh",
                                       ),
                                       ScheduleItem(
                                         name: "Dhuha",
                                         time: currentSchedule.dhuha,
+                                        isActive: state.activePrayer == "Dhuha",
                                       ),
                                       ScheduleItem(
                                         name: "Dzuhur",
                                         time: currentSchedule.dzuhur,
-                                        isActive: true,
+                                        isActive:
+                                            state.activePrayer == "Dzuhur",
                                       ),
                                       ScheduleItem(
                                         name: "Ashar",
                                         time: currentSchedule.ashar,
+                                        isActive: state.activePrayer == "Ashar",
                                       ),
                                       ScheduleItem(
                                         name: "Maghrib",
                                         time: currentSchedule.maghrib,
+                                        isActive:
+                                            state.activePrayer == "Maghrib",
                                       ),
                                       ScheduleItem(
                                         name: "Isya",
                                         time: currentSchedule.isya,
+                                        isActive: state.activePrayer == "Isya",
                                       ),
                                     ],
                                   )

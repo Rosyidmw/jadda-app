@@ -4,8 +4,17 @@ import '../../../core/constants/font_constant.dart';
 
 class HomeHeader extends StatelessWidget {
   final String cityName;
+  final String activePrayer;
+  final String activePrayerTime;
+  final String countdown;
 
-  const HomeHeader({super.key, required this.cityName});
+  const HomeHeader({
+    super.key,
+    required this.cityName,
+    required this.activePrayer,
+    required this.activePrayerTime,
+    required this.countdown,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -36,12 +45,12 @@ class HomeHeader extends StatelessWidget {
               const SizedBox(height: 8),
 
               Text(
-                "Dzuhur",
+                activePrayer,
                 style: FontConstant.h2.copyWith(color: ColorConstant.white),
               ),
 
               Text(
-                "12:01",
+                activePrayerTime,
                 style: FontConstant.caption.copyWith(
                   color: ColorConstant.surface,
                 ),
@@ -79,7 +88,7 @@ class HomeHeader extends StatelessWidget {
             ),
             child: Center(
               child: Text(
-                "02:22:25",
+                countdown,
                 style: FontConstant.h3.copyWith(color: ColorConstant.white),
               ),
             ),

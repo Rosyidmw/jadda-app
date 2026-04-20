@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:jadda/core/constants/string_constant.dart';
+import 'package:jadda/features/home/services/time_service.dart';
 import '../model/daily_schedule_model.dart';
 
 part 'home_state.dart';
@@ -10,6 +12,7 @@ class HomeCubit extends Cubit<HomeState> {
   HomeCubit() : super(HomeInitial());
 
   String currentCityId = "85d8ce590ad8981ca2c8286f79f59954";
+  Timer? _timer;
 
   Future<void> loadHomeData() async {
     emit(HomeLoading("Memuat data hari ini..."));
@@ -59,6 +62,8 @@ class HomeCubit extends Cubit<HomeState> {
             selectedDate: todayStr,
           ),
         );
+
+        _startTimer(todayStr);
       } else {
         emit(HomeError("Gagal mengambil data jadwal salat."));
       }
@@ -66,6 +71,40 @@ class HomeCubit extends Cubit<HomeState> {
       print('❌ [Home Error] $e');
       emit(HomeError("Terjadi kesalahan koneksi. Coba lagi nanti."));
     }
+  }
+
+  void _startTimer(String todayStr) {
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (state is HomeLoaded) {
+        final currentState = state as HomeLoaded;
+        final schedule = currentState.currentSchedule;
+
+        // Hanya jalankan timer jika data ada dan tanggal yang dipilih adalah HARI INI
+        if (schedule != null && currentState.selectedDate == todayStr) {
+          final timeData = TimeService.getCurrentAndNextPrayer(schedule);
+
+          emit(
+            HomeLoaded(
+              hijriDate: currentState.hijriDate,
+              cityName: currentState.cityName,
+              monthlySchedule: currentState.monthlySchedule,
+              selectedDate: currentState.selectedDate,
+              // Masukkan data realtime-nya
+              activePrayer: timeData["activePrayer"]!,
+              activePrayerTime: timeData["activePrayerTime"]!,
+              countdown: timeData["countdown"]!,
+            ),
+          );
+        }
+      }
+    });
+  }
+
+  @override
+  Future<void> close() {
+    _timer?.cancel();
+    return super.close();
   }
 
   void changeSelectedDate(String newDateString) {
