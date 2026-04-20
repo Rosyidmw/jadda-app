@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jadda/features/home/cubit/home_cubit.dart';
+import 'package:jadda/features/search_city/cubit/search_city_cubit.dart';
+import 'package:jadda/features/search_city/screen/search_city_screen.dart';
 import '../../../core/constants/color_constant.dart';
 import '../../../core/constants/font_constant.dart';
 
@@ -21,29 +25,58 @@ class HomeHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
+      padding: .symmetric(horizontal: 24.0, vertical: 32.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: .spaceBetween,
         children: [
           Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
-              Row(
-                children: [
-                  const Icon(
-                    Icons.location_on,
-                    color: Colors.redAccent,
-                    size: 18,
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    cityName,
-                    style: FontConstant.bodyMedium.copyWith(
-                      color: ColorConstant.white,
+              InkWell(
+                onTap: () async {
+                  final bool? isCityChanged = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BlocProvider(
+                        create: (context) => SearchCityCubit()..loadAllCities(),
+                        child: const SearchCityScreen(),
+                      ),
                     ),
+                  );
+
+                  if (isCityChanged == true && context.mounted) {
+                    context.read<HomeCubit>().loadHomeData();
+                  }
+                },
+                borderRadius: .circular(4),
+                child: Padding(
+                  padding: .symmetric(vertical: 4.0),
+                  child: Row(
+                    mainAxisSize: .min,
+                    children: [
+                      const Icon(
+                        Icons.location_on,
+                        color: Colors.redAccent,
+                        size: 18,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        cityName,
+                        style: FontConstant.bodyMedium.copyWith(
+                          color: ColorConstant.white,
+                        ),
+                      ),
+                      SizedBox(width: 4),
+                      Icon(
+                        Icons.keyboard_arrow_down,
+                        color: ColorConstant.white,
+                        size: 16,
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
+
               const SizedBox(height: 8),
 
               Text(

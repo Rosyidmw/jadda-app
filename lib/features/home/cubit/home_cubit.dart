@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:jadda/core/constants/string_constant.dart';
 import 'package:jadda/features/home/services/time_service.dart';
+import 'package:jadda/features/search_city/services/local_storage_service.dart';
 import '../model/daily_schedule_model.dart';
 
 part 'home_state.dart';
@@ -17,6 +18,18 @@ class HomeCubit extends Cubit<HomeState> {
   Future<void> loadHomeData() async {
     emit(HomeLoading("Memuat data hari ini..."));
     try {
+      final savedCityId = await LocalStorageService.getCityId();
+      if (savedCityId != null && savedCityId.isNotEmpty) {
+        currentCityId = savedCityId;
+        print(
+          '💾 [Home] Memuat jadwal untuk ID Kota tersimpan: $currentCityId',
+        );
+      } else {
+        print(
+          '💾 [Home] Belum ada kota tersimpan. Menggunakan default (Banyumas).',
+        );
+      }
+
       print('🚀 [Home] GET /cal/today ...');
       final calUrl = Uri.parse("${StringConstant.baseUrl}/cal/today");
       final calResponse = await http.get(calUrl);
