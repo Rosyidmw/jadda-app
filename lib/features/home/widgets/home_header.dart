@@ -12,6 +12,7 @@ class HomeHeader extends StatelessWidget {
   final String activePrayerTime;
   final String countdown;
   final bool isToday;
+  final VoidCallback onKiblatTap;
 
   const HomeHeader({
     super.key,
@@ -20,6 +21,7 @@ class HomeHeader extends StatelessWidget {
     required this.activePrayerTime,
     required this.countdown,
     required this.isToday,
+    required this.onKiblatTap,
   });
 
   @override
@@ -93,21 +95,25 @@ class HomeHeader extends StatelessWidget {
 
               const SizedBox(height: 12),
 
-              Row(
-                children: [
-                  const Icon(
-                    Icons.explore,
-                    color: ColorConstant.white,
-                    size: 14,
+              InkWell(
+                onTap: onKiblatTap,
+                borderRadius: .circular(4),
+                child: Padding(
+                  padding: .all(4),
+                  child: Row(
+                    mainAxisSize: .min,
+                    children: [
+                      Icon(Icons.explore, color: ColorConstant.white, size: 14),
+                      SizedBox(width: 4),
+                      Text(
+                        "Kiblat",
+                        style: FontConstant.bodySmall.copyWith(
+                          color: ColorConstant.white,
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 4),
-                  Text(
-                    "Kompas",
-                    style: FontConstant.bodySmall.copyWith(
-                      color: ColorConstant.white,
-                    ),
-                  ),
-                ],
+                ),
               ),
             ],
           ),

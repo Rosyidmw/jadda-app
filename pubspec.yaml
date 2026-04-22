@@ -39,6 +39,8 @@ dependencies:
   flutter_bloc: ^9.1.1
   google_nav_bar: ^5.0.7
   shared_preferences: ^2.5.5
+  flutter_compass: ^0.8.1
+  geolocator: ^14.0.2
 
 dev_dependencies:
   flutter_test:

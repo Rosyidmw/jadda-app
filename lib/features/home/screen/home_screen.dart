@@ -8,7 +8,8 @@ import '../cubit/home_cubit.dart';
 import '../widgets/home_header.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  final VoidCallback? onKiblatTap;
+  const HomeScreen({super.key, this.onKiblatTap});
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +48,7 @@ class HomeScreen extends StatelessWidget {
                     activePrayerTime: state.activePrayerTime,
                     countdown: state.countdown,
                     isToday: isToday,
+                    onKiblatTap: onKiblatTap ?? () {},
                   ),
 
                   // 2. BODY WIDGET (Melengkung putih)
