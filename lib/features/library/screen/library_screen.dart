@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jadda/features/hadith/cubit/daily_hadith_cubit.dart';
+import 'package:jadda/routes/route_path.dart';
 import '../../../core/constants/color_constant.dart';
 import '../../../core/constants/font_constant.dart';
 import '../widgets/daily_hadith_card.dart';
@@ -206,7 +207,12 @@ class LibraryScreen extends StatelessWidget {
                           title: "Al-Qur'an",
                           subtitle: "114 Surah",
                           icon: Icons.menu_book,
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              RoutePath.quranListScreen,
+                            );
+                          },
                         ),
                         SizedBox(width: 16),
                         LibraryMenuCard(

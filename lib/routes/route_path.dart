@@ -4,4 +4,5 @@ class RoutePath {
   static const mainScreen = "/mainScreen";
   static const qiblaScreen = "/qiblaScreen";
   static const libraryScreen = "/libraryScreen";
+  static const quranListScreen = "/quranListScreen";
 }
