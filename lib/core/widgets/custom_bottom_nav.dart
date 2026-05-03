@@ -36,7 +36,7 @@ class CustomBottomNav extends StatelessWidget {
             tabs: const [
               GButton(icon: Icons.access_time_filled, text: 'Salat'),
               GButton(icon: Icons.explore, text: 'Kiblat'),
-              GButton(icon: Icons.menu_book, text: 'Qur\'an'),
+              GButton(icon: Icons.menu_book, text: 'Iqra'),
               GButton(icon: Icons.person, text: 'Profil'),
             ],
             selectedIndex: selectedIndex,

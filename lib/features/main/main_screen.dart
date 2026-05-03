@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jadda/features/hadith/cubit/daily_hadith_cubit.dart';
 import 'package:jadda/features/home/cubit/home_cubit.dart';
 import 'package:jadda/features/home/screen/home_screen.dart';
+import 'package:jadda/features/library/screen/library_screen.dart';
 import 'package:jadda/features/qibla/screen/qibla_screen.dart';
 import '../../../core/widgets/custom_bottom_nav.dart';
 
@@ -31,7 +33,10 @@ class _MainScreenState extends State<MainScreen> {
 
       QiblaScreenWrapper(),
 
-      Center(child: Text("Halaman Qur'an")),
+      BlocProvider(
+        create: (context) => DailyHadithCubit()..getDailyHadith(),
+        child: const LibraryScreen(),
+      ),
 
       Center(child: Text("Halaman Profil")),
     ];

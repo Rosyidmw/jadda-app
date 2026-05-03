@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jadda/features/library/screen/library_screen.dart';
 import 'package:jadda/features/main/main_screen.dart';
 import 'package:jadda/features/qibla/screen/qibla_screen.dart';
 import 'package:jadda/features/splash/splash_screen.dart';
@@ -23,6 +24,12 @@ class RouteBuilder {
         return MaterialPageRoute(
           settings: settings,
           builder: (_) => QiblaScreenWrapper(),
+        );
+
+      case RoutePath.libraryScreen:
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => LibraryScreen(),
         );
     }
     return null;
