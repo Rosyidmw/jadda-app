@@ -33,6 +33,7 @@ class DailyHadithCard extends StatelessWidget {
         children: [
           Row(
             mainAxisAlignment: .spaceBetween,
+            crossAxisAlignment: .start,
             children: [
               Row(
                 children: [
@@ -50,17 +51,21 @@ class DailyHadithCard extends StatelessWidget {
                   ),
                 ],
               ),
-              Container(
-                padding: .symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.amber.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  hadith.grade,
-                  style: FontConstant.caption.copyWith(
-                    color: Colors.orange[800],
-                    fontWeight: .bold,
+              SizedBox(width: 12),
+              Flexible(
+                child: Container(
+                  padding: .symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.amber.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    hadith.takhrij,
+                    textAlign: .center,
+                    style: FontConstant.caption.copyWith(
+                      color: Colors.orange[800],
+                      fontWeight: .bold,
+                    ),
                   ),
                 ),
               ),
