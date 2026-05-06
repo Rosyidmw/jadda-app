@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jadda/features/quran/cubit/audio/audio_cubit.dart';
 import 'package:jadda/features/quran/cubit/download/download_cubit.dart';
+import 'package:jadda/features/quran/widgets/last_read_card.dart';
+import 'package:jadda/routes/route_path.dart';
 import '../../../core/constants/color_constant.dart';
 import '../../../core/constants/font_constant.dart';
 import '../cubit/quran_list_cubit.dart';
@@ -70,72 +72,95 @@ class QuranListScreen extends StatelessWidget {
                       );
                     } else if (state is QuranListLoaded) {
                       final surahs = state.surahs;
-                      return BlocBuilder<AudioCubit, AudioState>(
-                        builder: (context, audioState) {
-                          return ListView.separated(
-                            padding: .only(top: 16, bottom: 32),
-                            itemCount: surahs.length,
-                            separatorBuilder: (context, index) => Divider(
-                              color: Colors.grey.shade200,
-                              height: 1,
-                              indent: 24,
-                              endIndent: 24,
-                            ),
-                            itemBuilder: (context, index) {
-                              final surah = surahs[index];
+                      return Column(
+                        children: [
+                          LastReadCard(),
+                          Expanded(
+                            child: BlocBuilder<AudioCubit, AudioState>(
+                              builder: (context, audioState) {
+                                return ListView.separated(
+                                  padding: .only(top: 16, bottom: 32),
+                                  itemCount: surahs.length,
+                                  separatorBuilder: (context, index) => Divider(
+                                    color: Colors.grey.shade200,
+                                    height: 1,
+                                    indent: 24,
+                                    endIndent: 24,
+                                  ),
+                                  itemBuilder: (context, index) {
+                                    final surah = surahs[index];
 
-                              return BlocBuilder<DownloadCubit, DownloadState>(
-                                builder: (context, downloadState) {
-                                  final isDownloaded = downloadState
-                                      .downloadedSurahs
-                                      .contains(surah.number);
-                                  final downloadProgress = downloadState
-                                      .downloadingProgress[surah.number];
+                                    return BlocBuilder<
+                                      DownloadCubit,
+                                      DownloadState
+                                    >(
+                                      builder: (context, downloadState) {
+                                        final isDownloaded = downloadState
+                                            .downloadedSurahs
+                                            .contains(surah.number);
+                                        final downloadProgress = downloadState
+                                            .downloadingProgress[surah.number];
 
-                                  bool isPlaying = false;
-                                  bool isLoading = false;
+                                        bool isPlaying = false;
+                                        bool isLoading = false;
 
-                                  if (audioState is AudioPlaying &&
-                                      audioState.surahNumber == surah.number) {
-                                    isPlaying = true;
-                                  } else if (audioState is AudioLoading &&
-                                      audioState.surahNumber == surah.number) {
-                                    isLoading = true;
-                                  }
+                                        if (audioState is AudioPlaying &&
+                                            audioState.surahNumber ==
+                                                surah.number) {
+                                          isPlaying = true;
+                                        } else if (audioState is AudioLoading &&
+                                            audioState.surahNumber ==
+                                                surah.number) {
+                                          isLoading = true;
+                                        }
 
-                                  return SurahListTile(
-                                    surah: surah,
-                                    isPlaying: isPlaying,
-                                    isLoading: isLoading,
-                                    isDownloaded: isDownloaded,
-                                    downloadProgress: downloadProgress,
-                                    onTap: () {
-                                      print("Buka Surat: ${surah.nameLatin}");
-                                    },
-                                    onPlayTap: () {
-                                      context.read<AudioCubit>().playAudio(
-                                        surah.number,
-                                        surah.audioUrl,
-                                        isDownloaded: isDownloaded,
-                                      );
-                                    },
-                                    onDownloadTap: () {
-                                      if (!isDownloaded &&
-                                          downloadProgress == null) {
-                                        context
-                                            .read<DownloadCubit>()
-                                            .downloadSurah(
-                                              surah.number,
-                                              surah.audioUrl,
+                                        return SurahListTile(
+                                          surah: surah,
+                                          isPlaying: isPlaying,
+                                          isLoading: isLoading,
+                                          isDownloaded: isDownloaded,
+                                          downloadProgress: downloadProgress,
+                                          onTap: () {
+                                            Navigator.pushNamed(
+                                              context,
+                                              RoutePath.quranDetailScreen,
+                                              arguments: {
+                                                'surahNumber': surah.number,
+                                              },
                                             );
-                                      }
-                                    },
-                                  );
-                                },
-                              );
-                            },
-                          );
-                        },
+                                            print(
+                                              "Buka Surat: ${surah.nameLatin} surah ke-${surah.number}",
+                                            );
+                                          },
+                                          onPlayTap: () {
+                                            context
+                                                .read<AudioCubit>()
+                                                .playAudio(
+                                                  surah.number,
+                                                  surah.audioUrl,
+                                                  isDownloaded: isDownloaded,
+                                                );
+                                          },
+                                          onDownloadTap: () {
+                                            if (!isDownloaded &&
+                                                downloadProgress == null) {
+                                              context
+                                                  .read<DownloadCubit>()
+                                                  .downloadSurah(
+                                                    surah.number,
+                                                    surah.audioUrl,
+                                                  );
+                                            }
+                                          },
+                                        );
+                                      },
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                        ],
                       );
                     }
                     return SizedBox.shrink();

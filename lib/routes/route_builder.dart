@@ -4,8 +4,10 @@ import 'package:jadda/features/library/screen/library_screen.dart';
 import 'package:jadda/features/main/main_screen.dart';
 import 'package:jadda/features/qibla/screen/qibla_screen.dart';
 import 'package:jadda/features/quran/cubit/audio/audio_cubit.dart';
+import 'package:jadda/features/quran/cubit/detail/quran_detail_cubit.dart';
 import 'package:jadda/features/quran/cubit/download/download_cubit.dart';
 import 'package:jadda/features/quran/cubit/quran_list_cubit.dart';
+import 'package:jadda/features/quran/screens/quran_detail_screen.dart';
 import 'package:jadda/features/quran/screens/quran_list_screen.dart';
 import 'package:jadda/features/splash/splash_screen.dart';
 import 'package:jadda/routes/route_path.dart';
@@ -52,6 +54,23 @@ class RouteBuilder {
               ),
             ],
             child: const QuranListScreen(),
+          ),
+        );
+
+      case RoutePath.quranDetailScreen:
+        final args = settings.arguments as Map<String, dynamic>;
+        final surahNumber = args['surahNumber'] as int;
+
+        final bookmarkedAyah = args['bookmarkedAyah'] as int?;
+
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => BlocProvider(
+            create: (context) => QuranDetailCubit(),
+            child: QuranDetailScreen(
+              surahNumber: surahNumber,
+              bookmarkedAyah: bookmarkedAyah,
+            ),
           ),
         );
     }
